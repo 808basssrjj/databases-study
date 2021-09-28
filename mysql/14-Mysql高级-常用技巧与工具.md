@@ -68,7 +68,7 @@ LIMIT		<limit_params>
 | a(,n)  | 匹配0到n个a                   |
 | (...)  | 将模式元素组成单一元素        |
 
-```
+```mysql
 select * from emp where name regexp '^T';
 
 select * from emp where name regexp '2$';
@@ -199,7 +199,7 @@ mysql [options] [database]
 	mysql -uroot -p2143 db01 -e "select * from tb_book";
 ```
 
-![1555325632715](C:\Users\86198\Desktop\study\mysql\高级\新建文件夹\04\文档\assets\1555325632715.png) 
+![1555325632715](images\1555325632715.png) 
 
 
 
@@ -209,7 +209,7 @@ mysqladmin 是一个执行管理操作的客户端程序。可以用它来检查
 
 可以通过 ： mysqladmin --help  指令查看帮助文档
 
-![1555326108697](C:\Users\86198\Desktop\study\mysql\高级\新建文件夹\04\文档\assets\1555326108697.png) 
+![1555326108697](images\1555326108697.png) 
 
 ```
 示例 ：

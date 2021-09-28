@@ -296,7 +296,7 @@ CREATE TABLE `tb_user_2` (
 
 当使用load 命令导入数据的时候，适当的设置可以提高导入的效率。
 
-![1556269346488](C:\Users\86198\Desktop\study\mysql\高级\新建文件夹\02\assets\1556269346488.png) 
+ 
 
 对于 InnoDB 类型的表，有以下几种方式可以提高导入的效率：
 
@@ -398,7 +398,7 @@ CREATE TABLE `tb_user_2` (
    SHOW STATUS LIKE 'Qcache%';
    ```
 
-   ![1555250443958](C:\Users\86198\Desktop\study\mysql\高级\新建文件夹\03\assets\1555250443958.png) 
+   ![1555250443958](images\1555250443958.png) 
 
    各个变量的含义如下：
 
@@ -547,5 +547,7 @@ innodb用一块内存区做IO缓存池，该缓存池不仅用来缓存innodb的
    innodb_log_buffer_size=10M
    ```
 
-3. 
+
+
+
 
