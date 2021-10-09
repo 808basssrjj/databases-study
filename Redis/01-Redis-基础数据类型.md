@@ -252,22 +252,23 @@ CPU>内存>硬盘速度
 
 **string 类型数据操作的注意事项**
 
-- 数据操作不成功的反馈与数据正常操作之间的差异
+1. 数据操作不成功的反馈与数据正常操作之间的差异
 
-  ① 表示运行结果是否成功
+   ① 表示运行结果是否成功
 
-  ​	 (integer) 0 → false 失败
+   ​	 (integer) 0 → false 失败
 
-  ​	 (integer) 1 → true 成功
+   ​	 (integer) 1 → true 成功
 
-  ② 表示运行结果值
+   ② 表示运行结果值
 
-   	(integer) 3 → 3  3个 
+   (integer) 3 → 3  3个 
 
--  数据未获取到 :（nil）等同于null
+2. 数据未获取到 :（nil）等同于null
 
-- 数据最大存储量 :      512MB
--  数值计算最大范围 :  9223372036854775807
+3. 数据最大存储量 :      512MB
+
+4. 数值计算最大范围 :  9223372036854775807
 
 
 
@@ -344,19 +345,19 @@ hash类型：底层使用哈希表结构实现数据存储
 
 **hash 类型数据操作的注意事项**
 
-- hash类型下的value只能存储字符串，不允许存储其他数据类型，不存在嵌套现象。如果数据未获取到，
+1. hash类型下的value只能存储字符串，不允许存储其他数据类型，不存在嵌套现象。如果数据未获取到，
 
-  对应的值为（nil）
+   对应的值为（nil）
 
-- 每个 hash 可以存储 2 32 - 1 个键值对
+2. 每个 hash 可以存储 2 32 - 1 个键值对
 
-- hash类型十分贴近对象的数据存储形式，并且可以灵活添加删除对象属性。但hash设计初衷不是为了存
+3. hash类型十分贴近对象的数据存储形式，并且可以灵活添加删除对象属性。但hash设计初衷不是为了存
 
-  储大量对象而设计的，切记不可滥用，更不可以将hash作为对象列表使用
+   储大量对象而设计的，切记不可滥用，更不可以将hash作为对象列表使用
 
-- hgetall 操作可以获取全部属性，如果内部field过多，遍历整体数据效率就很会低，有可能成为数据访问
+4. hgetall 操作可以获取全部属性，如果内部field过多，遍历整体数据效率就很会低，有可能成为数据访问
 
-  瓶颈
+   瓶颈
 
 
 
@@ -444,19 +445,97 @@ list类型：保存多个数据，底层使用双向链表存储结构实现
 
 **list 类型数据操作注意事项**
 
-- list中保存的数据都是string类型的，数据总容量是有限的，最多2 32 - 1 个元素 (4294967295)。 
+1. list中保存的数据都是string类型的，数据总容量是有限的，最多2 32 - 1 个元素 (4294967295)。 
 
-- list具有索引的概念，但是操作数据时通常以队列(lpush rpop)的形式进行入队出队操作，或以栈(lpush lpop)的形式进行入栈出栈操作
+2. list具有索引的概念，但是操作数据时通常以队列(lpush rpop)的形式进行入队出队操作，或以栈(lpush lpop)的形式进行入栈出栈操作
 
-- 获取全部数据操作结束索引设置为-1 
+3. 获取全部数据操作结束索引设置为-1 
 
-- list可以对数据进行分页操作，通常第一页的信息来自于list，第2页及更多的信息通过数据库的形式加载
+4. list可以对数据进行分页操作，通常第一页的信息来自于list，第2页及更多的信息通过数据库的形式加载
 
 
 
 
 
 ## 6. set 集合
+
+新的存储需求：存储大量的数据，在查询方面提供更高的效率
+
+需要的存储结构：能够保存大量的数据，高效的内部存储机制，便于查询
+
+set类型：与hash存储结构完全相同，仅存储键，不存储值（nil），并且值是不允许重复的
+
+
+
+- 添加数据
+
+  ```
+  sadd key_name value1 ... valueN
+  ```
+
+- 获取全部数据
+
+  ```
+  smembers key_name
+  ```
+
+- 删除数据
+
+  ```
+  srem key_name member1 ... memberN
+  ```
+
+- 获取集合数据总量
+
+  ```
+  scard key_name
+  ```
+
+- 判断集合中是否包含指定数据
+
+  ```
+  sismember key_name member
+  ```
+
+- 随机获取指定数量的数据
+
+  ```
+  srandmember key_name [count]
+  ```
+
+- 随机获取集合中某个数据并移出集合
+
+  ```
+  spop key_name [count]
+  ```
+
+- 并交差集
+
+  ```
+  sinter key_name key1 ... keyN
+  sunion key_name key1 ... keyN
+  sdiff  key_name key1 ... keyN
+  
+  sinterstore distination_key key1 ... keyN  存储到指定集合
+  sunionstore distination_key key1 ... keyN
+  sdiffstore  distination_key key1 ... keyN
+  ```
+
+- 将指定数据从原始集合中移动到目标集合中
+
+  ```
+  smove source destination member
+  ```
+
+
+
+**set 类型数据操作的注意事项**
+
+1.  set 类型不允许数据重复，如果添加的数据在 set 中已经存在，将只保留一份
+
+2.  set 虽然与hash的存储结构相同，但是无法启用hash中存储值的空间
+
+
 
 案例:
 
@@ -468,11 +547,99 @@ list类型：保存多个数据，底层使用双向链表存储结构实现
 
 
 
-## 7. zset 有序集合
+## 7. sorted_set 有序集合
 
-案例:
+新的存储需求：数据排序有利于数据的有效展示，需要提供一种可以根据自身特征进行排序的方式
 
-set 排序 存储成绩表  排行榜
+需要的存储结构：新的存储模型，可以保存可排序的数据
+
+sorted_set类型：在set的存储结构基础上添加可排序字段
+
+
+
+- 添加数据
+
+  ```
+  zadd key_name score1 member1 ... scoreN memberN
+  ```
+
+- 获取全部
+
+  ```
+  zrange key_name start stop [withscores] (withscores:是否输出score)
+  zrevrange key_name start stop [withscores] (降序)
+  ```
+
+- 删除数据
+
+  ```
+  zrem key_name member
+  ```
+
+- 按条件获取
+
+  ```
+  zrangebyscore key_name min max [withscores] [limit]
+  zrevrangebyscore key_name max min [withscores] [limit]
+  例:
+  zrangebyscore set -inf +inf (全部)
+  zrangebyscore set (60 90  ( 60 < score <= 90 )
+  ```
+
+- 按条件删除
+
+  ```
+  zremrangebyscore key_name min max (根据score移除)
+  zremrangebyrank  key_name start stop (根据排名移除)
+  ```
+
+- 获取集合数据总量
+
+  ```
+  zcard key_name
+  zcount key_nam min max
+  ```
+
+- 集合交并操作
+
+  ```
+  zinterstore destination numkeys key [keys ...] [WEIGHTS weight [weight ...]] [AGGREGATE SUM|MIN|MAX]
+  zunionstore destination numkeys key [keys ...] [WEIGHTS weight [weight ...]] [AGGREGATE SUM|MIN|MAX]
+  例:
+  zunionstore des 2 s1 s2 aggregate max 
+  ```
+
+- 获取数据对应的索引 (排名)
+
+  ```
+  zrank key_name member
+  zrevrank key_name member
+  ```
+
+- score值获取与修改
+
+  ```
+  zscore key_name member
+  zincrby key increment member
+  ```
+
+  
+
+**sorted_set 类型数据操作的注意事项**
+
+1. score保存的数据存储空间是64位，如果是整数范围是-9007199254740992~9007199254740992
+
+2. score保存的数据也可以是一个双精度的double值，基于双精度浮点数的特征，可能会丢失精度，使用时
+
+   候要慎重
+
+3. sorted_set 底层存储还是基于set结构的，因此数据不能重复，如果重复添加相同的数据，score值将被反
+
+   复覆盖，保留最后一次修改的结果
+
+
+
+案例 : 存储成绩表  排行榜
 
 
 
